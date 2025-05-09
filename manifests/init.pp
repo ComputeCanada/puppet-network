@@ -106,22 +106,22 @@ class network (
   $ipv6_radvd_pidfile        = undef,
 
   # Stdmod commons
-  $package_name              = $::network::params::package_name,
+  $package_name              = $network::params::package_name,
   $package_ensure            = 'present',
 
-  $service_restart_exec      = $::network::params::service_restart_exec,
+  $service_restart_exec      = $network::params::service_restart_exec,
 
-  $config_file_path          = $::network::params::config_file_path,
+  $config_file_path          = $network::params::config_file_path,
   $config_file_require       = undef,
   $config_file_notify        = 'class_default',
   $config_file_source        = undef,
   $config_file_template      = undef,
   $config_file_content       = undef,
-  $config_file_options_hash  = { } ,
+  $config_file_options_hash  = {},
 
   $config_file_per_interface = false,
 
-  $config_dir_path           = $::network::params::config_dir_path,
+  $config_dir_path           = $network::params::config_dir_path,
   $config_dir_source         = undef,
   $config_dir_purge          = false,
   $config_dir_recurse        = true,
@@ -130,10 +130,10 @@ class network (
   $my_class                  = undef,
 
   $monitor_class             = undef,
-  $monitor_options_hash      = { } ,
+  $monitor_options_hash      = {},
 
   $firewall_class            = undef,
-  $firewall_options_hash     = { } ,
+  $firewall_options_hash     = {},
 
   $scope_hash_filter         = '(uptime.*|timestamp)',
 
@@ -144,8 +144,7 @@ class network (
 
   $vlan                      = undef,
 
-  ) inherits ::network::params {
-
+) inherits network::params {
   # Hiera import
 
   if( $hiera_merge == true ) {
@@ -191,12 +190,11 @@ class network (
     $real_confs_hash      = $confs_hash
   }
 
-
   # Class variables validation and management
 
-  $config_file_owner          = $::network::params::config_file_owner
-  $config_file_group          = $::network::params::config_file_group
-  $config_file_mode           = $::network::params::config_file_mode
+  $config_file_owner          = $network::params::config_file_owner
+  $config_file_group          = $network::params::config_file_group
+  $config_file_mode           = $network::params::config_file_mode
 
   $manage_config_file_content = $config_file_content ? {
     undef => $config_file_template ? {
@@ -264,7 +262,6 @@ class network (
   if $dependency_class {
     include $dependency_class
   }
-
 
   # Resources managed
 
@@ -343,8 +340,8 @@ class network (
   }
   # Configure default gateway (On RedHat). Also hostname is set.
   if $facts['os']['family'] == 'RedHat'
-  and ($::network::gateway
-  or $::network::hostname) {
+  and ($network::gateway
+  or $network::hostname) {
     file { '/etc/sysconfig/network':
       ensure  => $config_file_ensure,
       mode    => $config_file_mode,
@@ -411,7 +408,6 @@ class network (
     }
   }
 
-
   # Extra classes
 
   if $network::my_class {
@@ -431,5 +427,4 @@ class network (
       scope_hash   => {},
     }
   }
-
 }

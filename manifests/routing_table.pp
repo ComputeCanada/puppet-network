@@ -24,8 +24,7 @@
 define network::routing_table (
   $table_id,
   $table = $name
-  ) {
-
+) {
   if ! defined(Concat['/etc/iproute2/rt_tables']) {
     concat { '/etc/iproute2/rt_tables':
       owner => 'root',

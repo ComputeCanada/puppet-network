@@ -87,25 +87,22 @@ define network::conf (
 
   $options_hash = undef,
 
-  $ensure       = present ) {
+Enum['absent', 'present'] $ensure       = present ) {
+  include network
 
-  validate_re($ensure, ['present','absent'], 'Valid values are: present, absent. WARNING: If set to absent the conf file is removed.')
-
-  include ::network
-
-  $manage_path    = pick($path, "${::network::config_dir_path}/${name}")
-  $manage_mode    = pick($mode, $::network::config_file_mode)
-  $manage_owner   = pick($owner, $::network::config_file_owner)
-  $manage_group   = pick($group, $::network::config_file_group)
+  $manage_path    = pick($path, "${network::config_dir_path}/${name}")
+  $manage_mode    = pick($mode, $network::config_file_mode)
+  $manage_owner   = pick($owner, $network::config_file_owner)
+  $manage_group   = pick($group, $network::config_file_group)
   $manage_require = $config_file_require ? {
-    'class_default' => $::network::manage_config_file_require,
-    true            => $::network::manage_config_file_require,
+    'class_default' => $network::manage_config_file_require,
+    true            => $network::manage_config_file_require,
     false           => undef,
     default         => $config_file_require,
   }
   $manage_notify  = $config_file_notify ? {
-    'class_default' => $::network::manage_config_file_notify,
-    true            => $::network::manage_config_file_notify,
+    'class_default' => $network::manage_config_file_notify,
+    true            => $network::manage_config_file_notify,
     false           => undef,
     default         => $config_file_notify,
   }
@@ -116,7 +113,6 @@ define network::conf (
     },
     default => $content,
   }
-
 
   file { "network_conf_${name}":
     ensure  => $ensure,
@@ -129,6 +125,4 @@ define network::conf (
     require => $manage_require,
     notify  => $manage_notify,
   }
-
 }
-

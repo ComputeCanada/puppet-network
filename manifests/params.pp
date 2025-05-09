@@ -3,7 +3,6 @@
 # Defines all the variables used in the module.
 #
 class network::params {
-
   $service_restart_exec = $facts['os']['family'] ? {
     'Debian'  => '/sbin/ifdown -a --force ; /sbin/ifup -a',
     'Solaris' => '/usr/sbin/svcadm restart svc:/network/physical:default',
@@ -46,7 +45,7 @@ class network::params {
   }
 
   case $facts['os']['family'] {
-    'Debian','RedHat','Amazon','Suse', 'Solaris': { }
+    'Debian','RedHat','Amazon','Suse', 'Solaris': {}
     default: {
       fail("${facts['os']['name']} not supported.")
     }

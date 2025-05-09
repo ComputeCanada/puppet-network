@@ -103,59 +103,26 @@
 # Copyright (C) 2011 Mike Arnold, unless otherwise noted.
 #
 define network::route (
-  $ipaddress,
-  $netmask,
-  $gateway   = undef,
-  $metric    = undef,
-  $mtu       = undef,
-  $scope     = undef,
-  $source    = undef,
-  $table     = undef,
-  $cidr      = undef,
-  $family    = [ 'inet4' ],
+  Array $ipaddress,
+  Array $netmask,
+  Array $gateway   = undef,
+  Array $metric    = undef,
+  Integer $mtu       = undef,
+  Array $scope     = undef,
+  Array $source    = undef,
+  Array $table     = undef,
+  Array $cidr      = undef,
+  Array $family    = ['inet4'],
   $interface = $name,
   $ensure    = 'present'
 ) {
-  # Validate our arrays
-  validate_array($ipaddress)
-  validate_array($netmask)
-
-  if $gateway {
-    validate_array($gateway)
-  }
-
-  if $metric {
-    validate_array($metric)
-  }
-
-  if $mtu {
-    validate_integer($mtu)
-  }
-
-  if $scope {
-    validate_array($scope)
-  }
-
-  if $source {
-    validate_array($source)
-  }
-
-  if $table {
-    validate_array($table)
-  }
-
   if $cidr {
-    validate_array($cidr)
     $_cidr = $cidr
   } else {
     $_cidr = build_cidr_array($netmask)
   }
 
-  if $family {
-    validate_array($family)
-  }
-
-  include ::network
+  include network
 
   case $facts['os']['family'] {
     'RedHat': {
@@ -209,6 +176,6 @@ define network::route (
         notify  => $network::manage_config_file_notify,
       }
     }
-    default: { fail('Operating system not supported')  }
+    default: { fail('Operating system not supported') }
   }
 } # define network::route
