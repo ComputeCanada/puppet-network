@@ -282,7 +282,7 @@ define network::interface (
     'RedHat' => $facts['os']['release']['major'] ? {
       '9'     => false,
       '8'     => false,
-      default => true,
+      default => false,
     },
     default  => true,
   },
