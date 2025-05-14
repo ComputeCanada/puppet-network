@@ -7,6 +7,7 @@ class network::params {
     'Debian'  => '/sbin/ifdown -a --force ; /sbin/ifup -a',
     'Solaris' => '/usr/sbin/svcadm restart svc:/network/physical:default',
     'RedHat'  => $facts['os']['release']['major'] ? {
+      '9'     => 'nmcli connection reload',
       '8'     => 'nmcli connection reload',
       default => 'service network restart',
     },

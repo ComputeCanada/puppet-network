@@ -87,6 +87,7 @@ define network::mroute (
     undef => $facts['os']['name'] ? {
       'CumulusLinux' => 'ifreload -a',
       'RedHat'       => $facts['os']['release']['major'] ? {
+        '9'     => "/usr/bin/nmcli con reload ; /usr/bin/nmcli device reapply ${interface}",
         '8'     => "/usr/bin/nmcli con reload ; /usr/bin/nmcli device reapply ${interface}",
         default => "ifdown ${interface} --force ; ifup ${interface}",
       },
